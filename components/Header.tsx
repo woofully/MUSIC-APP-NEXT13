@@ -12,6 +12,7 @@ import { RxCaretLeft, RxCaretRight } from "react-icons/rx";
 import { HiHome } from "react-icons/hi";
 import { BiSearch } from "react-icons/bi";
 import { FaUserAlt } from "react-icons/fa";
+import usePlayer from "@/hooks/usePlayer";
 
 interface HeaderProps {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
+  const player = usePlayer();
   const authModal = useAuthModal();
   const router = useRouter();
 
@@ -29,6 +31,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
     //handle logout
     const { error } = await supabaseClient.auth.signOut();
     //TODO: reset any playing songs
+    player.reset();
     router.refresh();
 
     if (error) {
@@ -61,7 +64,10 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
           </button>
         </div>
         <div className="flex md:hidden gap-x-2 items-center">
-          <button className="rounded-full p-2 bg-white flex items-center justify-center hover:opacity-75 transition">
+          <button
+            onClick={() => router.push("/")}
+            className="rounded-full p-2 bg-white flex items-center justify-center hover:opacity-75 transition"
+          >
             <HiHome className="text-black" size={20} />
           </button>
           <button className="rounded-full p-2 bg-white flex items-center justify-center hover:opacity-75 transition">
@@ -74,7 +80,10 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
               <Button onClick={handleLogout} className="bg-white px-6 py-2">
                 Logout
               </Button>
-              <Button onClick={() => router.push("/account")}>
+              <Button
+                onClick={() => router.push("/account")}
+                className="bg-white"
+              >
                 <FaUserAlt />
               </Button>
             </div>
